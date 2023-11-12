@@ -1,26 +1,28 @@
-import getRadomHexColor from './randomHexColor';
+const startBtn = document.querySelector('[data-start]');
+const stopBtn = document.querySelector('[data-stop]');
 
-const dataStartRef = document.querySelector('[data-start]');
-const dataStopRef = document.querySelector('[data-stop]');
-const bodyRef = document.querySelector('body');
+const CHANGE_COLOR_DELAY = 1000;
+let timerId = null;
 
-const timer = null;
+stopBtn.disabled = true;
+stopBtn.addEventListener('click', onStopBtn);
+startBtn.addEventListener('click', onStartBtn);
 
-dataStartRef.addEventListener('click', onStart);
-dataStopRef.addEventListener('click', onStop);
+function onStartBtn(e) {
+  e.target.disabled = true;
+  stopBtn.disabled = false;
 
-function onStart() {
-  timerColor = setInterval(getColor, 1000);
+  timerId = setInterval(() => {
+    document.body.style.backgroundColor = getRandomHexColor();
+  }, CHANGE_COLOR_DELAY);
+}
+function onStopBtn(e) {
+  startBtn.disabled = false;
+  e.target.disabled = true;
 
-  dataStartRef.toggleAttribute('disabled');
+  clearInterval(timerId);
 }
 
-function onStop() {
-  clearInterval(timerColor);
-
-  dataStartRef.removeAttribute('disabled');
-}
-
-function getColor() {
-  bodyRef.style.backgroundColor = getRadomHexColor();
+function getRandomHexColor() {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
